@@ -21,7 +21,7 @@ object Protocol {
     }
   }
 
-  case class AggregatedResult(sumInt2: Long, usersCount: Int, userTotals: List[UserTotals])
+  case class AggregatedResult(sumInt2: Long, usersCount: Int, usersTotals: List[UserTotals])
 
   case class UserTotals(userId: String, avgWeight: Float, latestInt1: Int) {
     override def toString: String =

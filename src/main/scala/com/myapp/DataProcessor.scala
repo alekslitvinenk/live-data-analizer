@@ -26,7 +26,7 @@ class DataProcessor()(implicit ec: ExecutionContext) {
         AggregatedResult(
           sumInt2 = chunk.map(_.int2).sum,
           usersCount = groupedByUser.size,
-          userTotals = groupedByUser.map { kv =>
+          usersTotals = groupedByUser.map { kv =>
             val (key, value) = kv
 
             UserTotals(
@@ -38,11 +38,14 @@ class DataProcessor()(implicit ec: ExecutionContext) {
         )
       } map { agr =>
         val fileId = runningFileCount.incrementAndGet()
-        val pw = new PrintWriter(fileId + ".txt")
+        val fileName = fileId + ".txt"
+        val pw = new PrintWriter(fileName)
         pw.println(agr.sumInt2)
         pw.println(agr.usersCount)
-        agr.userTotals.foreach(userTotal => pw.println(userTotal))
+        agr.usersTotals.foreach(userTotal => pw.println(userTotal))
         pw.close()
+
+        println(s"File $fileName created")
       }
     }
   }
