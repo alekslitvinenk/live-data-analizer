@@ -3,8 +3,8 @@ package com.myapp
 import java.net.ServerSocket
 import java.util.Scanner
 
-import com.myapp.Protocol.{Chunk, UserData}
-import com.myapp.ProtocolFormat._
+import com.myapp.domain.Protocol.{Chunk, UserData}
+import com.myapp.domain.ProtocolFormat._
 
 import scala.collection.mutable
 

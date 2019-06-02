@@ -1,4 +1,6 @@
-package com.myapp
+package com.myapp.io
+
+import com.myapp.domain.Protocol
 
 class FileWriterStub extends FileWriter {
 

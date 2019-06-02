@@ -1,6 +1,6 @@
-package com.myapp
+package com.myapp.domain
 
-import com.myapp.Protocol.UserData
+import com.myapp.domain.Protocol.UserData
 
 object ProtocolFormat {
 

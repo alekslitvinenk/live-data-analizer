@@ -1,6 +1,6 @@
 package com.myapp.common
 
-import com.myapp.Protocol.UserData
+import com.myapp.domain.Protocol.UserData
 
 object TestData {
 

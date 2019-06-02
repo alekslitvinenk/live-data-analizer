@@ -1,6 +1,7 @@
 package com.myapp
 
-import com.myapp.Protocol.{AggregatedUserData, Chunk, UserData, UserTotals}
+import com.myapp.domain.Protocol.{AggregatedUserData, Chunk, UserData, UserTotals}
+import com.myapp.io.FileWriter
 
 import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}

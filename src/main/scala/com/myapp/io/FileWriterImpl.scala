@@ -1,9 +1,9 @@
-package com.myapp
+package com.myapp.io
 
 import java.io.PrintWriter
 import java.util.concurrent.atomic.AtomicInteger
 
-import com.myapp.Protocol.AggregatedUserData
+import com.myapp.domain.Protocol.AggregatedUserData
 
 class FileWriterImpl extends FileWriter {
 

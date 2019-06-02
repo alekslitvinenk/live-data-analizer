@@ -1,4 +1,4 @@
-package com.myapp
+package com.myapp.domain
 
 import scala.collection.mutable
 
