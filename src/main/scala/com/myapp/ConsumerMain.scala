@@ -2,7 +2,7 @@ package com.myapp
 
 import java.util.concurrent.{SynchronousQueue, ThreadPoolExecutor, TimeUnit}
 
-import com.myapp.io.FileWriterImpl
+import com.myapp.io._
 
 import scala.concurrent.ExecutionContext
 
@@ -20,13 +20,14 @@ object ConsumerMain extends App {
   )
 
   // Constants
-  val Port = 9000
-  val ChunkSize = 1000
-  val AggregateSize = ChunkSize
+  private val Port          = 9000
+  private val ChunkSize     = 1000
+  private val AggregateSize = ChunkSize
 
   // Services
-  val fileWriter = new FileWriterImpl()
-  val dataProcessor = new DataProcessor(AggregateSize, fileWriter)
-  val dataReader = new PortDataReader(Port, ChunkSize, dataProcessor)
+  private val fileWriter    = new FileWriterImpl()
+  private val dataProcessor = new DataProcessor(AggregateSize, fileWriter)
+  private val dataSource    = new SocketDataSource(Port)
+  private val dataReader    = new DataReader(dataSource, ChunkSize, dataProcessor)
   dataReader.start()
 }

@@ -2,9 +2,11 @@ package com.myapp.common
 
 import com.myapp.domain.Protocol.UserData
 
+import scala.collection.mutable
+
 object TestData {
 
-  def stringToUserData1 = {
+  def stringToUserData1: (String, UserData) = {
 
     val stringData = "0977dca4-9906-3171-bcec-87ec0df9d745,kFFzW4O8gXURgP8ShsZ0gcnNT5E=,0.18715484122922377,982761284,8442009284719321817"
 
@@ -18,4 +20,8 @@ object TestData {
 
     (stringData, userData)
   }
+
+  def userDataForAggregation = mutable.Queue(
+
+  )
 }

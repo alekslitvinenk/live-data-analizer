@@ -1,39 +1,51 @@
 package com.myapp
 
-import java.net.ServerSocket
 import java.util.Scanner
 
 import com.myapp.domain.Protocol.{Chunk, UserData}
 import com.myapp.domain.ProtocolFormat._
+import com.myapp.io.DataSource
 
 import scala.collection.mutable
 
-class PortDataReader(port: Int, chunkSize: Int, dataProcessor: DataProcessor) {
+class DataReader(dataSource: DataSource, chunkSize: Int, dataProcessor: DataProcessor) {
 
-  private val serverSocket = new ServerSocket(port)
-  private val clientSocket = serverSocket.accept()
-  private val inputStream = clientSocket.getInputStream
-  private val scanner = new Scanner(inputStream)
+  private val scanner = new Scanner(dataSource.inputStream())
 
   private val chunkedStorage: mutable.Queue[Chunk] = mutable.Queue(createNewChunk())
 
-  def start(): Unit =
-    while (true) {
-      if (scanner.hasNextLine) {
+  def start(loop: Boolean = true): Unit = {
+
+    def readWhileHasData(): Unit = {
+      while (scanner.hasNextLine) {
         consumeLine(scanner.nextLine())
       }
     }
 
+    readWhileHasData()
+
+    if (loop) {
+      while (true) {
+        readWhileHasData()
+      }
+    }
+  }
+
   private def consumeLine(userData: UserData): Unit = {
 
-    val front = chunkedStorage.head
+    if (chunkedStorage.isEmpty)
+      chunkedStorage.enqueue(createNewChunk())
 
-    if (front.size < chunkSize)
+    def front = chunkedStorage.head
+
+    if (front.size < chunkSize) {
       front.enqueue(userData)
-    else {
+    } else {
       chunkedStorage.enqueue(createNewChunk(Some(userData)))
-      dataProcessor.process(chunkedStorage.dequeue())
     }
+
+    if (front.size == chunkSize)
+      dataProcessor.process(chunkedStorage.dequeue())
   }
 
   private def createNewChunk(firstElement: Option[UserData] = None): Chunk =

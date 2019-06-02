@@ -1,10 +1,16 @@
 package com.myapp.io
 
-import com.myapp.domain.Protocol
+import com.myapp.domain.Protocol.AggregatedUserData
+
+import scala.collection.mutable
 
 class FileWriterStub extends FileWriter {
 
-  override def createFile(aggregatedUserData: Protocol.AggregatedUserData): Unit = {
-    println("Created file")
+  private val files: mutable.Queue[AggregatedUserData] = new mutable.Queue()
+
+  override def createFile(aggregatedUserData: AggregatedUserData): Unit = {
+    files.enqueue(aggregatedUserData)
   }
+
+  def getFiles = files.toList
 }
