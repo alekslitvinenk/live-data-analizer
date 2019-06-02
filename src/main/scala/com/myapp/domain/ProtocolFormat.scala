@@ -11,9 +11,9 @@ object ProtocolFormat {
     UserData(
       userId = components(0),
       data = components(1),
-      weight = components(2).toFloat,
+      weight = components(2).toDouble,
       int1 = components(3).toInt,
-      int2 = components(4).toLong,
+      int2 = BigInt(components(4)),
     )
   }
 }

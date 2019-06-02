@@ -28,7 +28,7 @@ class DataReaderSpec extends WordSpec
   "DataReader" should {
     "correctly read and aggregate data from stream" in {
 
-      Future {dataReader.start(false)}.futureValue
+      Future { dataReader.start(false) }.futureValue
 
       val files = fileWriter.getFiles
       files.length should be(2)
