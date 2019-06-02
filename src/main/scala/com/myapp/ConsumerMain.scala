@@ -23,6 +23,6 @@ object ConsumerMain extends App {
 
   // Services
   val dataProcessor = new DataProcessor()
-  val dataReader = new DataReader(Port, AggregateCount, dataProcessor)
+  val dataReader = new PortDataReader(Port, AggregateCount, dataProcessor)
   dataReader.start()
 }

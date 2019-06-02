@@ -4,10 +4,11 @@ import java.net.ServerSocket
 import java.util.Scanner
 
 import com.myapp.Protocol.{Chunk, UserData}
+import com.myapp.ProtocolFormat._
 
 import scala.collection.mutable
 
-class DataReader(port: Int, chunkSize: Int, dataProcessor: DataProcessor) {
+class PortDataReader(port: Int, chunkSize: Int, dataProcessor: DataProcessor) {
 
   private val serverSocket = new ServerSocket(port)
   private val clientSocket = serverSocket.accept()
@@ -16,16 +17,15 @@ class DataReader(port: Int, chunkSize: Int, dataProcessor: DataProcessor) {
 
   private val chunkedStorage: mutable.Queue[Chunk] = mutable.Queue(createNewChunk())
 
-  def start() =
+  def start(): Unit =
     while (true) {
       if (scanner.hasNextLine) {
         consumeLine(scanner.nextLine())
       }
     }
 
-  private def consumeLine(line: String): Unit = {
+  private def consumeLine(userData: UserData): Unit = {
 
-    val userData = UserData(line)
     val front = chunkedStorage.head
 
     if (front.size < chunkSize)

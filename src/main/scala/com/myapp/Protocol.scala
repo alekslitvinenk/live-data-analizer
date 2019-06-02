@@ -8,7 +8,7 @@ object Protocol {
 
   case class UserData(userId: String, data: String, weight: Float, int1: Int, int2: Long)
 
-  object UserData {
+  /*object UserData {
     def apply(source: String): UserData = {
       val components = source.split(',')
       new UserData(
@@ -19,7 +19,7 @@ object Protocol {
         int2 = components(4).toLong,
       )
     }
-  }
+  }*/
 
   case class AggregatedResult(sumInt2: Long, usersCount: Int, usersTotals: List[UserTotals])
 
