@@ -1,29 +1,28 @@
 package com.myapp
 
-import java.io.PrintWriter
-import java.util.concurrent.atomic.AtomicInteger
-
-import com.myapp.Protocol.{AggregatedResult, Chunk, UserTotals}
+import com.myapp.Protocol.{AggregatedUserData, Chunk, UserData, UserTotals}
 
 import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataProcessor()(implicit ec: ExecutionContext) {
+class DataProcessor(val aggregateSize: Int, val fileWriter: FileWriter)(implicit ec: ExecutionContext) {
 
-  private val runningFileCount = new AtomicInteger()
+  private var usersData: Chunk =  mutable.Queue[UserData]()
 
-  def process(queue: mutable.Queue[Chunk]) = {
+  def process(rawChunk: Chunk): Unit = {
 
-    // Head is writable, so checking if tail is long enough
-    while (queue.tail.nonEmpty) {
+    usersData ++= rawChunk
 
-      val chunk = queue.dequeue()
+    while (usersData.size >= aggregateSize) {
+
+      val (chunk, reminder) = usersData.splitAt(aggregateSize)
+      usersData = reminder
 
       // To avoid raising back pressure process data on another thread
       Future {
         val groupedByUser = chunk.groupBy(_.userId)
 
-        AggregatedResult(
+        AggregatedUserData(
           sumInt2 = chunk.map(_.int2).sum,
           usersCount = groupedByUser.size,
           usersTotals = groupedByUser.map { kv =>
@@ -37,15 +36,7 @@ class DataProcessor()(implicit ec: ExecutionContext) {
           }.toList
         )
       } map { agr =>
-        val fileId = runningFileCount.incrementAndGet()
-        val fileName = fileId + ".txt"
-        val pw = new PrintWriter(fileName)
-        pw.println(agr.sumInt2)
-        pw.println(agr.usersCount)
-        agr.usersTotals.foreach(userTotal => pw.println(userTotal))
-        pw.close()
-
-        println(s"File $fileName created")
+        fileWriter.createFile(agr)
       }
     }
   }

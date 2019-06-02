@@ -32,7 +32,7 @@ class PortDataReader(port: Int, chunkSize: Int, dataProcessor: DataProcessor) {
       front.enqueue(userData)
     else {
       chunkedStorage.enqueue(createNewChunk(Some(userData)))
-      dataProcessor.process(chunkedStorage)
+      dataProcessor.process(chunkedStorage.dequeue())
     }
   }
 

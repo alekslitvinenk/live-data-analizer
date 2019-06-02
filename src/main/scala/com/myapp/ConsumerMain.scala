@@ -9,7 +9,7 @@ object ConsumerMain extends App {
   implicit val blockingEC: ExecutionContext = ExecutionContext.fromExecutorService(
     // These values seem good to go from empirical point of view
     new ThreadPoolExecutor(
-      10,
+      3,
       20,
       120,
       TimeUnit.SECONDS,
@@ -19,10 +19,12 @@ object ConsumerMain extends App {
 
   // Constants
   val Port = 9000
-  val AggregateCount = 1000
+  val ChunkSize = 1000
+  val AggregateSize = ChunkSize
 
   // Services
-  val dataProcessor = new DataProcessor()
-  val dataReader = new PortDataReader(Port, AggregateCount, dataProcessor)
+  val fileWriter = new FileWriterStub()
+  val dataProcessor = new DataProcessor(AggregateSize, fileWriter)
+  val dataReader = new PortDataReader(Port, ChunkSize, dataProcessor)
   dataReader.start()
 }
