@@ -25,7 +25,7 @@ object ConsumerMain extends App {
   private val AggregateSize = ChunkSize
 
   // Services
-  private val fileWriter    = new FileWriterImpl()
+  private val fileWriter    = new FileWriterStub()
   private val dataProcessor = new DataProcessor(AggregateSize, fileWriter)
   private val dataSource    = new SocketDataSource(Port)
   private val dataReader    = new DataReader(dataSource, ChunkSize, dataProcessor)
